@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Live Data Engine — Hackathon 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Barlow+Condensed:wght@400;500;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1280px;height:720px;overflow:hidden;background:#1A1A1A;font-family:'Barlow',sans-serif;-webkit-font-smoothing:antialiased}
+.slide{position:absolute;top:0;left:0;width:1280px;height:720px;overflow:hidden;display:none;padding:56px 72px;flex-direction:column}
+.slide.active{display:flex}
+#progress-bar{position:fixed;bottom:0;left:0;height:3px;background:#F5C800;width:0;transition:width 300ms ease;z-index:200}
+#slide-counter{position:fixed;bottom:10px;right:16px;font-family:'Barlow Condensed',sans-serif;font-size:14px;color:#6B6B6B;z-index:200}
+.gs-badge{position:absolute;top:24px;left:32px;z-index:10;background:#F5C800;color:#1A1A1A;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;padding:4px 12px;border-radius:4px;white-space:nowrap}
+/* SLIDE 1 */
+#slide-1{background:#1A1A1A;align-items:center;justify-content:center;text-align:center}
+.s1-content{display:flex;flex-direction:column;align-items:center}
+.s1-hero{font-family:'Playfair Display',serif;font-weight:600;font-size:86px;color:#FFFFFF;letter-spacing:-2px;line-height:1.0;max-width:900px}
+.s1-yellow{font-family:'Barlow Condensed',sans-serif;font-size:38px;color:#F5C800;margin-top:28px}
+.s1-grey{font-family:'Barlow Condensed',sans-serif;font-size:38px;color:#FFFFFF;opacity:.4;margin-top:10px}
+.s1-muted{font-family:'Barlow Condensed',sans-serif;font-size:21px;color:#E0DED8;margin-top:48px;line-height:1.5}
+.s1-footer{position:absolute;bottom:28px;left:0;width:100%;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:14px;color:#3D3D3A}
+/* SLIDE 2 */
+#slide-2{background:#1A1A1A}
+.s2-head{font-family:'Playfair Display',serif;font-weight:600;font-size:48px;line-height:1.1;margin-top:36px}
+.s2-head .wh{color:#FFFFFF;display:block}.s2-head .ye{color:#F5C800;display:block}
+.s2-panel{background:#FFFFFF;border-radius:8px;padding:28px 32px;margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:40px;flex:1;overflow:hidden}
+.s2-col-label{font-family:'Barlow Condensed',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px}
+.s2-col-label.red{color:#791F1F}.s2-col-label.green{color:#0F6E56}
+.s2-pill{background:#FCEBEB;border-left:3px solid #791F1F;border-radius:0 4px 4px 0;padding:12px 16px;font-family:'Barlow Condensed',sans-serif;font-size:17px;color:#791F1F;font-weight:500;margin-bottom:10px}
+.s2-note{font-family:'Barlow',sans-serif;font-size:17px;color:#791F1F;font-style:italic;margin-top:10px;line-height:1.5}
+.s2-row{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid #C8C6C0}
+.s2-dot{width:10px;height:10px;border-radius:50%;background:#0F6E56;flex-shrink:0;margin-right:12px}
+.s2-row-text{font-family:'Barlow',sans-serif;font-size:17px;color:#111111}
+.s2-total{margin-top:20px;padding-top:16px;border-top:2px solid #C8C6C0}
+.s2-total-num{font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:700;color:#0F6E56}
+.s2-total-sub{font-family:'Barlow',sans-serif;font-size:17px;color:#444441;margin-top:4px}
+.s2-total-vs{font-family:'Barlow',sans-serif;font-size:17px;color:#3D3D3A;margin-top:2px}
+/* SLIDE 3 */
+#slide-3{background:#1A1A1A}
+.s3-head{font-family:'Playfair Display',serif;font-weight:600;font-size:44px;line-height:1.15;margin-top:36px;margin-bottom:24px}
+.s3-head .wh{color:#FFFFFF;display:block}.s3-head .ye{color:#F5C800;display:block}
+.s3-cards{display:grid;grid-template-columns:1fr 1fr;gap:24px;flex:1}
+.s3-wrap{display:flex;flex-direction:column}
+.s3-card-lbl{font-family:'Barlow Condensed',sans-serif;font-size:13px;text-transform:uppercase;color:#3D3D3A;margin-bottom:10px;letter-spacing:.08em}
+.s3-card{background:#FFFFFF;padding:24px;flex:1}
+.s3-card.left{border-left:4px solid #F5C800;border-radius:0 8px 8px 0}
+.s3-card.right{border-left:4px solid #0F6E56;border-radius:0 8px 8px 0}
+.s3-bname{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#111111}
+.s3-bsub{font-family:'Barlow Condensed',sans-serif;font-size:17px;color:#3D3D3A;margin-top:2px}
+.s3-bnote{font-family:'Barlow',sans-serif;font-size:17px;color:#3D3D3A;font-style:italic;margin-top:2px}
+.s3-tbl{width:100%;border-collapse:collapse;margin-top:16px}
+.s3-tbl tr{border-bottom:.5px solid #C8C6C0}.s3-tbl tr:last-child{border-bottom:none}
+.s3-tbl td{padding:8px 0;font-family:'Barlow Condensed',sans-serif;font-size:17px;color:#444441}
+.s3-tbl td:first-child{width:72px;color:#3D3D3A}
+.s3-ypill{background:#F5C800;color:#1A1A1A;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;padding:2px 10px;border-radius:3px;display:inline-block}
+.s3-callout{background:#F5C800;border-radius:6px;padding:16px 28px;margin-top:16px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#1A1A1A;flex-shrink:0}
+/* SLIDE 4 */
+#slide-4{background:#1A1A1A}
+.s4-pill{background:#F5C800;color:#1A1A1A;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;padding:4px 12px;border-radius:4px;display:inline-block;margin-top:40px;margin-bottom:14px}
+.s4-head{font-family:'Playfair Display',serif;font-weight:600;font-size:46px;color:#FFFFFF;margin-bottom:8px}
+.s4-sub{font-family:'Barlow Condensed',sans-serif;font-size:20px;color:#F5C800;margin-bottom:28px}
+.s4-card{background:#2A2A2A;border:1px solid #3A3A3A;border-radius:8px;padding:48px 40px;flex:1;display:flex;flex-direction:column;justify-content:center}
+.s4-pipeline{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.s4-node{padding:20px 24px;min-width:160px;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:500;position:relative;flex-shrink:0;text-align:center}
+.s4-node.n1{background:#3A3A3A;border:1px solid #F5C800;color:#FFFFFF}
+.s4-node.n2{background:#3A3A3A;border:1px solid #C8C6C0;color:#FFFFFF}
+.s4-node.n3{background:#E0DEFF;border:1px solid #3C3489;color:#3C3489}
+.s4-node.n4{background:#C8EDE3;border:1px solid #0F6E56;color:#0F6E56}
+.s4-node.n5{background:#3A3A3A;border:1px solid #C8C6C0;color:#FFFFFF}
+.s4-node-note{position:absolute;top:-24px;left:50%;transform:translateX(-50%);font-family:'Barlow Condensed',sans-serif;font-size:17px;font-style:italic;white-space:nowrap}
+.s4-node.n3 .s4-node-note{color:#3C3489}.s4-node.n4 .s4-node-note{color:#0F6E56}
+.s4-arr{color:#F5C800;font-size:24px;flex-shrink:0;display:flex;align-items:center}
+.s4-bottom{margin-top:32px;text-align:center}
+.s4-bottom-l1{font-family:'Barlow Condensed',sans-serif;font-size:22px;color:#FFFFFF;font-weight:500}
+.s4-bottom-l2{font-family:'Barlow',sans-serif;font-size:19px;color:#E0DED8;margin-top:8px}
+/* SLIDE 5 */
+#slide-5{background:#1A1A1A}
+.s5-pill{background:#E0DEFF;color:#3C3489;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;padding:4px 12px;border-radius:4px;display:inline-block;margin-top:36px;margin-bottom:12px}
+.s5-head{font-family:'Playfair Display',serif;font-weight:600;font-size:46px;color:#FFFFFF;line-height:1.05;margin-bottom:6px}
+.s5-sub{font-family:'Barlow Condensed',sans-serif;font-size:20px;color:#E0DED8;margin-bottom:20px}
+.s5-cols{display:grid;grid-template-columns:1fr 1fr;gap:32px;flex:1;min-height:0;overflow:hidden}
+.s5-flow{display:flex;flex-direction:column;gap:0;min-height:0;overflow:hidden}
+.s5-step{background:#2A2A2A;border-radius:6px;padding:9px 14px;border-left:3px solid transparent}
+.s5-stitle{font-family:'Barlow Condensed',sans-serif;font-size:17px;color:#FFFFFF;font-weight:500}
+.s5-sbody{font-family:'Barlow',sans-serif;font-size:17px;color:#E0DED8;margin-top:3px;line-height:1.4}
+.s5-smono{font-family:'Courier New',monospace;font-size:17px;color:#E0DEFF;margin-top:4px;display:block;letter-spacing:-.01em}
+.s5-arrow{text-align:left;color:#F5C800;font-size:17px;line-height:1;padding:3px 0 3px 18px}
+.s5-branch{display:flex;gap:8px;align-items:flex-start;margin-top:3px}
+.s5-branch-conn{width:20px;border-top:1px solid #3A3A3A;margin-top:18px;flex-shrink:0}
+.s5-step5{flex:1}
+.s5-right{display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.s5-rlbl{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:#0F6E56;margin-bottom:14px;flex-shrink:0}
+.s5-rcards{display:flex;flex-direction:column;gap:6px;flex:1;overflow:hidden}
+.s5-rcard{background:#2A2A2A;border:1px solid #3A3A3A;border-radius:6px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.s5-rcard.best{border-left:3px solid #0F6E56;background:rgba(15,110,86,0.12)}
+.s5-rrun{font-family:'Barlow Condensed',sans-serif;font-size:17px;color:#E0DED8}
+.s5-rcost{font-family:'Barlow Condensed',sans-serif;font-size:17px;color:#FFFFFF;font-weight:500}
+.s5-rcard.best .s5-rrun,.s5-rcard.best .s5-rcost{color:#FFFFFF}
+.s5-rpct{color:#0F6E56;font-weight:700;margin-left:8px}
+.s5-rnote-wrap{margin-top:auto;padding-top:20px;flex-shrink:0}
+.s5-rnote-rule{width:40px;height:2px;background:#F5C800;margin-bottom:16px}
+.s5-rnote-quote{font-family:'Playfair Display',serif;font-weight:600;font-size:28px;color:#FFFFFF;line-height:1.2;text-align:left;max-width:400px}
+/* SLIDE 6 */
+#slide-6{background:#1A1A1A;padding-top:36px}
+.s6-pill{background:#C8EDE3;color:#0A4A38;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;padding:4px 12px;border-radius:4px;display:inline-block;margin-top:28px;margin-bottom:12px}
+.s6-head{font-family:'Playfair Display',serif;font-weight:600;font-size:40px;color:#FFFFFF;margin-bottom:6px}
+.s6-sub{font-family:'Barlow Condensed',sans-serif;font-size:19px;color:#E0DED8;margin-bottom:14px}
+.s6-cols{display:grid;grid-template-columns:52% 48%;gap:28px;flex:1;overflow:hidden;min-height:0}
+.s6-col-lbl{font-family:'Barlow Condensed',sans-serif;font-size:13px;text-transform:uppercase;color:#F5C800;letter-spacing:.1em;margin-bottom:12px}
+.s6-card{background:#2A2A2A;border:1px solid #3A3A3A;border-radius:8px;padding:13px 16px;overflow:visible}
+.s6-card.c1{border-left:3px solid #0F6E56}.s6-card.c2{border-left:3px solid #7A4D00}.s6-card.c3{border-left:3px solid #791F1F}
+.s6-ctop{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.s6-ctitle{font-family:'Barlow Condensed',sans-serif;font-size:17px;color:#FFFFFF;font-weight:500}
+.s6-freq{font-family:'Barlow Condensed',sans-serif;font-size:13px;padding:3px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0}
+.s6-freq.g{background:#C8EDE3;color:#0A4A38}.s6-freq.a{background:#FAE4B0;color:#5C3900}.s6-freq.r{background:#FCEBEB;color:#791F1F}
+.s6-csub{font-family:'Barlow',sans-serif;font-size:17px;color:#E0DED8;margin-top:5px;line-height:1.3}
+.s6-track{background:#3A3A3A;height:4px;border-radius:2px;margin-top:7px}
+.s6-fill{height:4px;border-radius:2px}
+.s6-conn{width:1px;background:#3A3A3A;margin:0 auto;overflow:hidden}
+.s6-doorman{background:#2A2A2A;border:1px solid #F5C800;border-radius:4px;padding:8px 16px;display:inline-flex;align-items:center;gap:8px;margin-top:8px}
+.s6-doorman i{color:#F5C800;font-size:16px}
+.s6-doorman span{font-family:'Barlow Condensed',sans-serif;font-size:17px;color:#F5C800}
+.s6-step{background:#2A2A2A;border-radius:8px;padding:10px 14px}
+.s6-step.t1{border-left:3px solid #F5C800}.s6-step.t2{border-left:3px solid #3C3489}
+.s6-step.t3{border-left:3px solid #0F6E56}.s6-step.t4a{border-left:3px solid #0F6E56}
+.s6-step.t4b{border-left:3px solid #791F1F;background:#1E1E2A;margin-left:12px}
+.s6-shd{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.s6-stitle{font-family:'Barlow Condensed',sans-serif;font-size:17px;color:#FFFFFF;font-weight:500}
+.s6-sbody{font-family:'Barlow',sans-serif;font-size:17px;color:#E0DED8;margin-top:3px;line-height:1.3}
+.s6-stag{font-family:'Barlow Condensed',sans-serif;font-size:13px;text-transform:uppercase;color:#F5C800;flex-shrink:0;padding-top:1px}
+.s6-tagpill{font-family:'Barlow Condensed',sans-serif;font-size:11px;text-transform:uppercase;padding:3px 8px;border-radius:3px;flex-shrink:0}
+.s6-tagpill.pu{background:#E0DEFF;color:#3C3489}.s6-tagpill.gr{background:#C8EDE3;color:#0A4A38}
+.s6-vconn{width:1px;margin:0 auto}
+.s6-fork{display:flex;gap:10px;align-items:flex-start}
+.s6-fork-lbl{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:500;color:#FCEBEB;background:rgba(121,31,31,0.2);padding:3px 10px;border-radius:3px;margin-bottom:6px;display:inline-block}
+.s6-summary{background:#1E2A26;border-radius:8px;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;margin-top:8px}
+.s6-sum-l p{font-family:'Barlow Condensed',sans-serif;font-size:17px;color:#FFFFFF;font-weight:500;line-height:1.5}
+.s6-sum-l p+p{font-size:17px;color:#E0DED8;font-weight:400}
+.s6-sum-r{display:flex;align-items:center}
+.s6-stat{text-align:center}
+.s6-snum{font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:700;color:#0F6E56;line-height:1}
+.s6-slbl{font-family:'Barlow Condensed',sans-serif;font-size:17px;color:#E0DED8;margin-top:3px}
+.s6-vdiv{width:1px;height:40px;background:#3A3A3A;margin:0 18px}
+/* SLIDE 7 */
+#slide-7{background:#FFFFFF;padding:28px 56px 0}
+.s7-trow{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:12px;border-bottom:1px solid #C8C6C0;margin-top:6px}
+.s7-title{font-family:'Playfair Display',serif;font-weight:600;font-size:34px;color:#111111}
+.s7-subtitle{font-family:'Barlow Condensed',sans-serif;font-size:17px;color:#3D3D3A}
+.s7-body{flex:1;display:grid;grid-template-columns:64% 36%;gap:28px;padding-top:16px;overflow:hidden;min-height:0}
+.s7-left{display:flex;flex-direction:column;min-width:0}
+.s7-swrap{position:relative;flex:1;min-height:0}
+#s6-sankey{width:100%;height:100%;display:block}
+.s7-ovrow{display:flex;flex-wrap:wrap;gap:16px;padding:6px 0;font-family:'Barlow Condensed',sans-serif;font-size:17px;color:#444441;flex-shrink:0}
+.s7-ovitem{display:inline-flex;align-items:center;gap:6px}
+.s7-ovdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.s7-right{display:flex;flex-direction:column;padding-top:2px;overflow:hidden}
+.s7-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#444441;margin-bottom:4px;flex-shrink:0}
+.s7-bullet{padding:12px 0;border-bottom:1px solid #C8C6C0;border-left:3px solid transparent;opacity:.25;transition:opacity 350ms,border-left-color 300ms}
+.s7-bullet:last-child{border-bottom:none}
+.s7-bullet.full{opacity:1}.s7-bullet.revealed{opacity:.5}.s7-bullet.active{opacity:1;border-left-color:#111111}
+.s7-blabel{font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:17px;color:#111111;margin-bottom:2px}
+.s7-btext{font-family:'Barlow',sans-serif;font-size:17px;color:#444441;line-height:1.4}
+.s7-hl{border-radius:0 4px 4px 0;border-left:3px solid transparent;opacity:0;max-height:0;padding:0 16px;overflow:hidden;transition:opacity 280ms,max-height 360ms,padding 300ms,margin 300ms}
+.s7-hl.on{opacity:1;max-height:160px;padding:11px 16px;margin:4px 0 8px}
+.s7-hllabel{font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:13px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.s7-hlbody{font-family:'Barlow',sans-serif;font-size:17px;color:#111111;line-height:1.4}
+.s7-simbar{background:#111111;flex-shrink:0;margin:0 -56px;padding:10px 28px 8px}
+.s7-sim-top{display:flex;align-items:flex-start;gap:0}
+.s7-sim-cols{display:flex;flex:1;justify-content:space-between;align-items:flex-start}
+.s7-sim-col{flex:1;text-align:center;padding:0 6px}
+.s7-sim-col+.s7-sim-col{border-left:1px solid #2A2A2A}
+.s7-sim-num{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:700;line-height:1.1}
+.s7-sim-sub{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:#C4C2BC;margin-top:2px;line-height:1.3}
+.s7-sim-dots{display:flex;gap:8px;align-items:center;padding-left:16px;padding-top:4px;flex-shrink:0}
+.s7-dot{width:6px;height:6px;border-radius:50%;background:#444;transition:all 200ms}
+.s7-dot.on{width:8px;height:8px;background:#F5C800}
+.node-label{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:500;fill:#111111;paint-order:stroke;stroke:#FFFFFF;stroke-width:3px;stroke-linejoin:round}
+.sk-link{transition:stroke-opacity 400ms}
+/* SLIDE 8 */
+#slide-8{background:#1A1A1A}
+.s8-head{font-family:'Playfair Display',serif;font-weight:600;font-size:46px;color:#FFFFFF;margin-top:32px}
+.s8-sub{font-family:'Barlow Condensed',sans-serif;font-size:21px;color:#E0DED8;margin-top:8px;margin-bottom:24px}
+.s8-tiers{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.s8-tier{background:#2A2A2A;border:1px solid #3A3A3A;border-radius:8px;padding:22px}
+.s8-tier.ta{border-top:4px solid #0F6E56}.s8-tier.tb{border-top:4px solid #7A4D00}.s8-tier.tc{border-top:4px solid #6B6B6B}
+.s8-tlbl{font-family:'Barlow Condensed',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em}
+.s8-tier.ta .s8-tlbl{color:#0F6E56}.s8-tier.tb .s8-tlbl{color:#7A4D00}.s8-tier.tc .s8-tlbl{color:#C4C2BC}
+.s8-ttitle{font-family:'Barlow Condensed',sans-serif;font-size:21px;color:#FFFFFF;font-weight:700;margin-top:6px}
+.s8-tcheck{font-family:'Barlow',sans-serif;font-size:17px;color:#E0DED8;margin-top:8px}
+.s8-tscale{font-family:'Barlow Condensed',sans-serif;font-size:17px;margin-top:6px}
+.s8-tier.ta .s8-tscale{color:#C8EDE3}.s8-tier.tb .s8-tscale{color:#FAE4B0}.s8-tier.tc .s8-tscale{color:#E0DED8}
+.s8-imp{background:#1E2A26;border-left:4px solid #0F6E56;border-radius:0 8px 8px 0;padding:22px 28px;margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:32px;flex-shrink:0}
+.s8-implbl{font-family:'Barlow Condensed',sans-serif;font-size:13px;text-transform:uppercase;color:#0F6E56;letter-spacing:.1em;margin-bottom:10px}
+.s8-impbody{font-family:'Barlow',sans-serif;font-size:17px;color:#FFFFFF;line-height:1.6}
+.s8-imppills{display:flex;flex-direction:column;gap:8px;justify-content:center}
+.s8-imppill{background:#C8EDE3;color:#0A4A38;font-family:'Barlow Condensed',sans-serif;font-size:17px;padding:8px 16px;border-radius:4px}
+/* SLIDE 9 */
+#slide-9{background:#1A1A1A;padding-top:32px}
+.s9-pills{display:flex;gap:8px;margin-top:24px;margin-bottom:12px;flex-shrink:0}
+.s9-py{background:#F5C800;color:#1A1A1A;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;padding:4px 12px;border-radius:4px}
+.s9-pg{background:#C8EDE3;color:#0A4A38;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;padding:4px 12px;border-radius:4px}
+.s9-head{font-family:'Playfair Display',serif;font-weight:600;font-size:40px;color:#FFFFFF;margin-bottom:14px;flex-shrink:0}
+.s9-cols{display:grid;grid-template-columns:38% 24% 38%;flex:1;min-height:0;overflow:hidden}
+.s9-card{background:#2A2A2A;border:1px solid #3A3A3A;border-radius:8px;padding:20px;display:flex;flex-direction:column}
+.s9-ch{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-shrink:0}
+.s9-ctitle{font-family:'Barlow Condensed',sans-serif;font-size:19px;color:#FFFFFF}
+.s9-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:.5px solid #3A3A3A}
+.s9-item:last-child{border-bottom:none}
+.s9-arr{font-family:'Barlow Condensed',sans-serif;font-size:17px;color:#F5C800;flex-shrink:0}
+.s9-itext{font-family:'Barlow Condensed',sans-serif;font-size:17px;color:#E0DED8}
+.s9-centre{display:flex;align-items:center;justify-content:center;padding:0 4px}
+.s9-tagline{text-align:center;font-family:'Barlow',sans-serif;font-size:18px;color:#E0DED8;font-style:italic;margin-top:10px;flex-shrink:0}
+/* SLIDE 10 */
+#slide-10{background:#1A1A1A;align-items:center;justify-content:center}
+.s10-lbl{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:#F5C800;text-align:center}
+.s10-head{font-family:'Playfair Display',serif;font-weight:600;font-size:52px;color:#FFFFFF;text-align:center;margin-top:12px;margin-bottom:32px;line-height:1.1}
+.s10-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;width:100%;max-width:1100px}
+.s10-card{border-radius:8px;padding:28px}
+.s10-card.c1{background:#C8EDE3}.s10-card.c2{background:#FAE4B0}.s10-card.c3{background:#FCEBEB}
+.s10-card i{font-size:32px;display:block;margin-bottom:12px}
+.s10-card.c1 i{color:#0F6E56}.s10-card.c2 i{color:#7A4D00}.s10-card.c3 i{color:#791F1F}
+.s10-ctitle{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:700}
+.s10-card.c1 .s10-ctitle{color:#0A4A38}.s10-card.c2 .s10-ctitle{color:#5C3900}.s10-card.c3 .s10-ctitle{color:#791F1F}
+.s10-cresult{font-family:'Barlow',sans-serif;font-size:18px;margin-top:6px}
+.s10-card.c1 .s10-cresult{color:#0A4A38}.s10-card.c2 .s10-cresult{color:#5C3900}.s10-card.c3 .s10-cresult{color:#791F1F}
+.s10-ctag{font-family:'Barlow Condensed',sans-serif;font-size:17px;margin-top:14px;padding-top:12px}
+.s10-card.c1 .s10-ctag{border-top:1px solid rgba(15,110,86,.3);color:#0F6E56}
+.s10-card.c2 .s10-ctag{border-top:1px solid rgba(122,77,0,.3);color:#7A4D00}
+.s10-card.c3 .s10-ctag{border-top:1px solid rgba(121,31,31,.3);color:#791F1F}
+.s10-bottom{text-align:center;margin-top:26px}
+.s10-s1{font-family:'Barlow Condensed',sans-serif;font-size:24px;color:#FFFFFF}
+.s10-s2{font-family:'Barlow Condensed',sans-serif;font-size:24px;color:#F5C800;margin-top:6px}
+/* SLIDE 11 */
+#slide-11{background:#1A1A1A}
+.s11-head{font-family:'Playfair Display',serif;font-weight:600;font-size:42px;color:#FFFFFF;margin-top:32px}
+.s11-sub{font-family:'Barlow Condensed',sans-serif;font-size:19px;color:#E0DED8;margin-top:6px;margin-bottom:16px}
+.s11-dash{background:#111111;border:1px solid #2A2A2A;border-radius:8px;padding:18px 22px;flex:1;overflow:hidden}
+.s11-tiles{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.s11-tile{background:#1A1A1A;border:1px solid #2A2A2A;border-radius:6px;padding:14px 16px}
+.s11-tnum{font-family:'Barlow Condensed',sans-serif;font-size:34px;line-height:1}
+.s11-tnum.wh{color:#FFFFFF}.s11-tnum.gr{color:#0F6E56}.s11-tnum.am{color:#7A4D00}.s11-tnum.bl{color:#0C447C}
+.s11-tlbl{font-family:'Barlow Condensed',sans-serif;font-size:12px;text-transform:uppercase;color:#C4C2BC;letter-spacing:.08em;margin-top:4px}
+.s11-tsub{font-family:'Barlow',sans-serif;font-size:17px;margin-top:4px}
+.s11-tsub.gr{color:#0F6E56}.s11-tsub.am{color:#7A4D00}.s11-tsub.mu{color:#E0DED8}
+.s11-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:.5px solid #2A2A2A}
+.s11-row:last-child{border-bottom:none}
+.s11-ts{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:#C4C2BC;width:52px;flex-shrink:0}
+.s11-biz{font-family:'Barlow Condensed',sans-serif;font-size:17px;color:#FFFFFF;font-weight:500;width:220px;flex-shrink:0}
+.s11-ev{font-family:'Barlow',sans-serif;font-size:17px;color:#E0DED8;flex:1}
+.s11-pill{font-family:'Barlow Condensed',sans-serif;font-size:12px;text-transform:uppercase;padding:3px 10px;border-radius:3px;flex-shrink:0}
+.s11-pill.em{background:#FCEBEB;color:#791F1F}.s11-pill.au{background:#C8EDE3;color:#0A4A38}
+.s11-pill.re{background:#FAE4B0;color:#5C3900}.s11-pill.bo{background:#FCEBEB;color:#791F1F}
+.s11-pill.rp{background:#C8DCF5;color:#0C447C}
+/* SLIDE 12 */
+#slide-12{background:#F4F3EF;padding-top:32px}
+.s12-head{font-family:'Playfair Display',serif;font-weight:600;font-size:42px;color:#111111;margin-top:20px}
+.s12-sub{font-family:'Barlow Condensed',sans-serif;font-size:19px;color:#3D3D3A;margin-top:6px;margin-bottom:14px}
+.s12-r1{background:#111111;border-radius:8px;padding:20px 26px;display:flex;align-items:center;flex-shrink:0;flex-wrap:wrap}
+.s12-block{flex:1;padding:0 20px;min-width:0}
+.s12-block:first-child{padding-left:0}.s12-block+.s12-block{border-left:1px solid #2A2A2A}
+.s12-blbl{font-family:'Barlow Condensed',sans-serif;font-size:13px;text-transform:uppercase;color:#C4C2BC;letter-spacing:.1em;margin-bottom:6px}
+.s12-bnum{font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:700;line-height:1}
+.s12-bnum.gr{color:#0F6E56}.s12-bnum.rd{color:#791F1F}
+.s12-bsub{font-family:'Barlow Condensed',sans-serif;font-size:17px;color:#E0DED8;margin-top:4px}
+.s12-bcalls{font-family:'Barlow Condensed',sans-serif;font-size:13px;margin-top:4px}
+.s12-bcalls.gr{color:#C8EDE3}.s12-bcalls.rd{color:#FCEBEB}
+.s12-sep{width:100%;height:1px;background:#2A2A2A;margin:14px 0}
+.s12-anote{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:500;color:#F5C800;text-align:center;flex-basis:100%}
+.s12-r2{display:grid;grid-template-columns:60% 40%;gap:18px;margin-top:14px}
+.s12-tcard{border:1px solid #C8C6C0;border-radius:8px;overflow:hidden}
+.s12-tbl{width:100%;border-collapse:collapse}
+.s12-tbl th{background:#F4F3EF;font-family:'Barlow Condensed',sans-serif;font-size:13px;text-transform:uppercase;color:#3D3D3A;letter-spacing:.08em;padding:8px 13px;text-align:left;border-bottom:1px solid #C8C6C0}
+.s12-tbl td{font-family:'Barlow Condensed',sans-serif;font-size:17px;padding:8px 13px;border-bottom:.5px solid #C8C6C0;color:#111111;vertical-align:top}
+.s12-tbl tr:last-child td{border-bottom:none}
+.s12-tbl tr.naive td{background:#FEF2F2;color:#791F1F;border-left:3px solid #791F1F}
+.s12-tbl tr.sys td{background:#F0FBF6;color:#0F6E56;font-weight:700;border-left:3px solid #0F6E56}
+.s12-tbl .ck{color:#0F6E56}.s12-tbl .cx{color:#791F1F}
+.s12-tsub{font-family:'Barlow',sans-serif;font-size:13px;color:#3D3D3A;display:block;margin-top:2px;font-weight:400}
+.s12-tsub.gr{color:#0F6E56}
+.s12-pq{font-family:'Playfair Display',serif;font-style:italic;font-size:17px;color:#444441;border-left:3px solid #C8C6C0;padding-left:14px;margin-top:12px;line-height:1.5}
+.s12-mcards{display:flex;flex-direction:column;gap:10px}
+.s12-mc{border:1px solid #C8C6C0;border-radius:8px;padding:13px 16px;display:flex;align-items:center;gap:12px}
+.s12-mnum{font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:700;color:#0F6E56;flex-shrink:0;line-height:1}
+.s12-mlbl{font-family:'Barlow Condensed',sans-serif;font-size:17px;color:#111111;font-weight:500}
+.s12-msub{font-family:'Barlow',sans-serif;font-size:17px;color:#444441;margin-top:2px}
+.s12-r3{background:#F4F3EF;border-left:4px solid #0F6E56;border-radius:0 8px 8px 0;padding:13px 22px;margin-top:12px;display:flex;align-items:center;gap:32px;flex-shrink:0}
+.s12-bllbl{font-family:'Barlow Condensed',sans-serif;font-size:13px;text-transform:uppercase;color:#0F6E56;letter-spacing:.1em;margin-bottom:6px}
+.s12-blbody{font-family:'Barlow',sans-serif;font-size:17px;color:#444441;line-height:1.5;max-width:380px}
+.s12-bstats{display:flex;align-items:center;flex-shrink:0}
+.s12-bs{text-align:center}
+.s12-bsn{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;color:#0F6E56}
+.s12-bsl{font-family:'Barlow Condensed',sans-serif;font-size:13px;text-transform:uppercase;color:#3D3D3A;letter-spacing:.06em;margin-top:2px}
+.s12-bdiv{width:1px;height:40px;background:#C8C6C0;margin:0 16px}
+/* SLIDE 13 */
+#slide-13{background:#1A1A1A;align-items:center;justify-content:center;text-align:center}
+.s13-inner{max-width:860px;margin:0 auto;display:flex;flex-direction:column;align-items:center}
+.s13-l1{font-family:'Playfair Display',serif;font-weight:600;font-size:58px;color:#FFFFFF;line-height:1.1}
+.s13-l2{font-family:'Playfair Display',serif;font-weight:600;font-size:58px;color:#F5C800;line-height:1.1}
+.s13-rule{height:1px;background:#F5C800;margin:36px auto}
+.s13-tag{font-family:'Barlow Condensed',sans-serif;font-size:27px;color:#FFFFFF}
+.s13-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:40px}
+.s13-pill{background:#2A2A2A;border:1px solid #3A3A3A;font-family:'Barlow Condensed',sans-serif;font-size:17px;padding:9px 20px;border-radius:4px}
+.s13-pill.wh{color:#FFFFFF}.s13-pill.ye{color:#F5C800}
+.s13-footer{font-family:'Barlow Condensed',sans-serif;font-size:17px;color:#3D3D3A;margin-top:40px}
+/* ANIM HELPERS */
+.wa{opacity:0;transform:translateY(12px);transition:opacity 380ms ease-out,transform 380ms ease-out}
+.wa.in{opacity:1;transform:none}
+.wax{opacity:0;transform:translateX(-24px);transition:opacity 400ms ease-out,transform 400ms ease-out}
+.wax.in{opacity:1;transform:none}
+.waxr{opacity:0;transform:translateX(24px);transition:opacity 400ms ease-out,transform 400ms ease-out}
+.waxr.in{opacity:1;transform:none}
+.wsc{opacity:0;transform:scale(.92);transition:opacity 350ms ease-out,transform 350ms ease-out}
+.wsc.in{opacity:1;transform:scale(1)}
+</style>
+</head>
+<body>
+
+<!-- ══ SLIDE 1 ══ -->
+<div class="slide" id="slide-1">
+  <div class="gs-badge">Gelbe Seiten</div>
+  <div class="s1-content">
+    <div class="s1-hero wa" id="s1-a">3.8 million businesses.</div>
+    <div class="s1-yellow wa" id="s1-b">Most update their own website.</div>
+    <div class="s1-grey wa" id="s1-c">Not the directory.</div>
+    <div class="s1-muted wa" id="s1-d">Directories that rely on manual updates fall behind. Fast.</div>
+  </div>
+  <div class="s1-footer">Team 4 &nbsp;·&nbsp; Live Data Engine &nbsp;·&nbsp; Hackathon 2026</div>
+</div>
+
+<!-- ══ SLIDE 2 ══ -->
+<div class="slide" id="slide-2">
+  <div class="gs-badge">Gelbe Seiten</div>
+  <div class="s2-head wa" id="s2-h">
+    <span class="wh">Businesses update their website.</span>
+    <span class="ye">Nobody tells the directory.</span>
+  </div>
+  <div class="s2-panel wa" id="s2-p">
+    <div>
+      <div class="s2-col-label red">If you use an LLM on every record</div>
+      <div class="s2-pill wa" id="s2p1">claude-sonnet-4-5 per record = €7,790/month</div>
+      <div class="s2-pill wa" id="s2p2">gpt-4o per record = €6,073/month</div>
+      <div class="s2-pill wa" id="s2p3">Even cheapest (gpt-4o-mini) = €377/month</div>
+      <div class="s2-note">Same model. The savings come from the architecture — not the model.</div>
+      <div class="s2-note" style="margin-top:8px">This is not a product. This is a bill.</div>
+    </div>
+    <div>
+      <div class="s2-col-label green">The tiered approach</div>
+      <div class="s2-row wa" id="s2r1"><span class="s2-dot"></span><span class="s2-row-text">Cheap checks run on every record</span></div>
+      <div class="s2-row wa" id="s2r2"><span class="s2-dot"></span><span class="s2-row-text">Expensive checks run only when triggered</span></div>
+      <div class="s2-row wa" id="s2r3"><span class="s2-dot"></span><span class="s2-row-text">LLM sees ~2% of records — not 100%</span></div>
+      <div class="s2-row wa" id="s2r4"><span class="s2-dot"></span><span class="s2-row-text">Cost stays under €5/day at full scale</span></div>
+      <div class="s2-total">
+        <div class="s2-total-num">€0.10 – €0.50 / month</div>
+        <div class="s2-total-sub">steady state at 100,000 listings</div>
+        <div class="s2-total-vs">vs €7,790/month (claude-sonnet-4-5 naive)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 3 ══ -->
+<div class="slide" id="slide-3">
+  <div class="gs-badge">Gelbe Seiten</div>
+  <div class="s3-head">
+    <span class="wh">The business website changed.</span>
+    <span class="ye">The Gelbe Seiten listing didn't.</span>
+  </div>
+  <div class="s3-cards">
+    <div class="s3-wrap wax" id="s3-l">
+      <div class="s3-card-lbl">What Gelbe Seiten shows</div>
+      <div class="s3-card left">
+        <div class="s3-bname">Blumenhaus Sonnenschein</div>
+        <div class="s3-bsub">Florist</div>
+        <table class="s3-tbl">
+          <tr><td>Mon–Fri</td><td>08:00 – 19:00</td></tr>
+          <tr><td>Sat</td><td>07:00 – 15:00</td></tr>
+          <tr><td>Sun</td><td>Closed</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="s3-wrap waxr" id="s3-r">
+      <div class="s3-card-lbl">What their website says</div>
+      <div class="s3-card right">
+        <div class="s3-bname">Blumenhaus Sonnenschein</div>
+        <div class="s3-bnote">Updated 3 weeks ago</div>
+        <table class="s3-tbl">
+          <tr><td>Mon–Fri</td><td><span class="s3-ypill">09:00 – 18:00</span></td></tr>
+          <tr><td>Sat</td><td><span class="s3-ypill">CLOSED</span></td></tr>
+          <tr><td>Sun</td><td style="color:#3D3D3A">Closed</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="s3-callout wa" id="s3-c">3 months. Nobody noticed. Nobody fixed it.</div>
+</div>
+
+<!-- ══ SLIDE 4 ══ -->
+<div class="slide" id="slide-4">
+  <div class="gs-badge">Gelbe Seiten</div>
+  <div class="s4-pill wa" id="s4-pill">STAGE 1</div>
+  <div class="s4-head wa" id="s4-h">How do we get the current state?</div>
+  <div class="s4-sub wa" id="s4-s">Source: Gelbe Seiten → Web scraping</div>
+  <div class="s4-card wa" id="s4-card">
+    <div class="s4-pipeline">
+      <div class="s4-node n1 wa" id="s4n1">Sitemap extraction</div>
+      <div class="s4-arr wa" id="s4a1"><i class="ti ti-arrow-right"></i></div>
+      <div class="s4-node n2 wa" id="s4n2">Regex [Keywords]</div>
+      <div class="s4-arr wa" id="s4a2"><i class="ti ti-arrow-right"></i></div>
+      <div class="s4-node n3 wa" id="s4n3"><span class="s4-node-note">only when needed</span>LLM Check</div>
+      <div class="s4-arr wa" id="s4a3"><i class="ti ti-arrow-right"></i></div>
+      <div class="s4-node n4 wa" id="s4n4"><span class="s4-node-note">regex improves</span>Self-learning</div>
+      <div class="s4-arr wa" id="s4a4"><i class="ti ti-arrow-right"></i></div>
+      <div class="s4-node n5 wa" id="s4n5">Hash / Checksum</div>
+    </div>
+    <div class="s4-bottom">
+      <div class="s4-bottom-l1">Every new site structure encountered rewrites the regex automatically.</div>
+      <div class="s4-bottom-l2">One small LLM call. Zero cost next time. The pipeline gets cheaper with every pass.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 5 ══ -->
+<div class="slide" id="slide-5">
+  <div class="gs-badge">Gelbe Seiten</div>
+  <div class="s5-pill wa" id="s5-pill">THE BRAIN</div>
+  <div class="s5-head wa" id="s5-head">The system gets smarter every run.</div>
+  <div class="s5-sub wa" id="s5-sub">Every LLM call trains a free replacement for the next time.</div>
+  <div class="s5-cols">
+    <div class="s5-flow">
+      <div class="s5-step wa" id="s5st1" style="border-left-color:#7A4D00">
+        <div class="s5-stitle">LLM Recipe Builder called</div>
+        <div class="s5-sbody">~€0.001 per domain · last resort only</div>
+      </div>
+      <div class="s5-arrow wa" id="s5ar1">↓</div>
+      <div class="s5-step wa" id="s5st2" style="border-left-color:#3C3489">
+        <div class="s5-stitle">Generalizer abstracts the rule</div>
+        <div class="s5-sbody">Site-specific CSS → domain-agnostic regex<code class="s5-smono">.footer .tel → \+49\s*\d{2,4}[\s-]\d+</code></div>
+      </div>
+      <div class="s5-arrow wa" id="s5ar2">↓</div>
+      <div class="s5-step wa" id="s5st3" style="border-left-color:#0C447C">
+        <div class="s5-stitle">Sandbox validates new pattern</div>
+        <div class="s5-sbody">Precision ≥ 0.97 · Zero false positives · Tested against golden fixtures</div>
+      </div>
+      <div class="s5-arrow wa" id="s5ar3">↓</div>
+      <div class="s5-step wa" id="s5st4" style="border-left-color:#0F6E56">
+        <div class="s5-stitle">Pattern promoted to global use</div>
+        <div class="s5-sbody">Free extraction on all future runs · Confidence starts at 0.5</div>
+      </div>
+      <div class="s5-branch">
+        <div class="s5-branch-conn"></div>
+        <div class="s5-step s5-step5 wa" id="s5st5" style="border-left-color:#791F1F">
+          <div class="s5-stitle">Confidence &lt; 0.20 → Repairer</div>
+          <div class="s5-sbody">LLM tightens the pattern · Self-healing, automatic</div>
+        </div>
+      </div>
+    </div>
+    <div class="s5-right">
+      <div class="s5-rlbl">THE BRAIN EFFECT</div>
+      <div class="s5-rcards">
+        <div class="s5-rcard wa" id="s5rc1">
+          <span class="s5-rrun">Run 1 — 0 patterns</span>
+          <span class="s5-rcost">140 calls · €0.134</span>
+        </div>
+        <div class="s5-rcard wa" id="s5rc2">
+          <span class="s5-rrun">Run 2 — 50 patterns</span>
+          <span class="s5-rcost">95 calls · €0.097<span class="s5-rpct">−28%</span></span>
+        </div>
+        <div class="s5-rcard wa" id="s5rc3">
+          <span class="s5-rrun">Run 3 — 100 patterns</span>
+          <span class="s5-rcost">60 calls · €0.072<span class="s5-rpct">−46%</span></span>
+        </div>
+        <div class="s5-rcard wa" id="s5rc4">
+          <span class="s5-rrun">Run 4 — 150 patterns</span>
+          <span class="s5-rcost">35 calls · €0.053<span class="s5-rpct">−60%</span></span>
+        </div>
+        <div class="s5-rcard best wa" id="s5rc5">
+          <span class="s5-rrun">Run 5+ — 200 patterns</span>
+          <span class="s5-rcost">15 calls · €0.033<span class="s5-rpct">−75%</span></span>
+        </div>
+      </div>
+      <div class="s5-rnote-wrap">
+        <div class="s5-rnote-rule"></div>
+        <div class="s5-rnote-quote">The LLM only runs on domains<br>it has never seen before.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 6 ══ -->
+<div class="slide" id="slide-6">
+  <div class="gs-badge">Gelbe Seiten</div>
+  <div class="s6-pill" id="s6-pill">STAGE 2</div>
+  <div class="s6-head" id="s6-head">How do we monitor it regularly?</div>
+  <div class="s6-sub" id="s6-sub">Adaptive, self-correcting, cost-aware.</div>
+  <div class="s6-cols">
+    <div>
+      <div class="s6-col-lbl" id="s6-ll">Adaptive website monitoring</div>
+      <div class="s6-card c1" id="s6c1" style="opacity:0;transform:translateY(16px);transition:opacity 350ms ease-out,transform 350ms ease-out">
+        <div class="s6-ctop"><span class="s6-ctitle">Website recently updated</span><span class="s6-freq g">interval ÷ 2</span></div>
+        <div class="s6-csub">Checked sooner — change detected, schedule tightens</div>
+        <div class="s6-track"><div class="s6-fill" style="background:#0F6E56;width:30%"></div></div>
+      </div>
+      <div class="s6-conn" id="s6cn1" style="height:0;transition:height 150ms ease"></div>
+      <div class="s6-card c2" id="s6c2" style="opacity:0;transform:translateY(16px);transition:opacity 350ms ease-out,transform 350ms ease-out">
+        <div class="s6-ctop"><span class="s6-ctitle">No updates since last check</span><span class="s6-freq a">interval × 1.5</span></div>
+        <div class="s6-csub">Stable site — back off to save cost</div>
+        <div class="s6-track"><div class="s6-fill" style="background:#7A4D00;width:65%"></div></div>
+      </div>
+      <div class="s6-conn" id="s6cn2" style="height:0;transition:height 150ms ease"></div>
+      <div class="s6-card c3" id="s6c3" style="opacity:0;transform:translateY(16px);transition:opacity 350ms ease-out,transform 350ms ease-out">
+        <div class="s6-ctop"><span class="s6-ctitle">404 error — site unreachable</span><span class="s6-freq r">interval × 3, then × 4</span></div>
+        <div class="s6-csub">Exponential backoff — stops wasting checks on dead sites</div>
+        <div class="s6-track"><div class="s6-fill" style="background:#791F1F;width:100%"></div></div>
+      </div>
+      <div id="s6-door" style="opacity:0;transition:opacity 300ms;margin-top:7px">
+        <div class="s6-doorman"><i class="ti ti-shield-check"></i><span>Doorman / Footer check</span></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px">
+      <div class="s6-col-lbl" id="s6-rl" style="opacity:0;transition:opacity 300ms">Conditions for data extraction</div>
+      <div class="s6-step t1" id="s6s1" style="opacity:0;transform:translateX(16px);transition:opacity 300ms ease-out,transform 300ms ease-out">
+        <div class="s6-shd">
+          <div class="s6-stitle">Checksum changed</div>
+          <div class="s6-stag">TRIGGER</div>
+        </div>
+        <div class="s6-sbody">Hash mismatch detected — meaningful diff confirmed</div>
+      </div>
+      <div class="s6-vconn" id="s6vc1" style="background:#F5C800;height:0;transition:height 150ms ease"></div>
+      <div class="s6-step t2" id="s6s2" style="opacity:0;transform:translateX(16px);transition:opacity 300ms ease-out,transform 300ms ease-out">
+        <div class="s6-shd">
+          <div class="s6-stitle">Extraction runs</div>
+          <span class="s6-tagpill pu">Free first</span>
+        </div>
+        <div class="s6-sbody">Regex → JSON-LD → Brain patterns → Recipe → LLM (last resort)</div>
+      </div>
+      <div class="s6-vconn" id="s6vc2" style="background:#3A3A3A;height:0;transition:height 150ms ease"></div>
+      <div class="s6-step t3" id="s6s3" style="opacity:0;transform:translateX(16px);transition:opacity 300ms ease-out,transform 300ms ease-out">
+        <div class="s6-shd">
+          <div class="s6-stitle">Confidence score ≥ 0.85</div>
+          <span class="s6-tagpill gr">Auto-write</span>
+        </div>
+        <div class="s6-sbody">Local SLM validates — DB updated automatically</div>
+      </div>
+      <div id="s6-fork" style="opacity:0;transition:opacity 300ms">
+        <div class="s6-fork">
+          <div style="flex:1">
+            <div class="s6-vconn" style="background:#3A3A3A;height:8px;margin-bottom:5px"></div>
+            <div class="s6-step t4a" id="s6s4a" style="opacity:0;transform:translateX(16px);transition:opacity 300ms ease-out,transform 300ms ease-out">
+              <div class="s6-stitle" style="color:#0F6E56"><i class="ti ti-circle-check" style="font-size:15px;vertical-align:middle;margin-right:4px"></i>DB updated</div>
+              <div class="s6-sbody">Record corrected. Audit log written. Interval adjusted.</div>
+            </div>
+          </div>
+          <div style="flex:1">
+            <div class="s6-fork-lbl">&lt; 0.85 confidence →</div>
+            <div class="s6-step t4b" id="s6s4b" style="opacity:0;transform:translateX(16px);transition:opacity 300ms ease-out,transform 300ms ease-out">
+              <div class="s6-stitle"><i class="ti ti-mail" style="font-size:14px;color:#791F1F;vertical-align:middle;margin-right:4px"></i>Automated email to client</div>
+              <div class="s6-sbody">Owner verifies or corrects — max 1 email per 30 days</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="s6-summary" id="s6-sum" style="opacity:0;transition:opacity 300ms">
+    <div class="s6-sum-l"><p>Paid listings re-checked every 7 days minimum.</p><p>Free listings: 30 days. Low-churn: 60 days.</p></div>
+    <div class="s6-sum-r">
+      <div class="s6-stat"><div class="s6-snum">80%</div><div class="s6-slbl">of checks skipped by doorman</div></div>
+      <div class="s6-vdiv"></div>
+      <div class="s6-stat"><div class="s6-snum">≤7 days</div><div class="s6-slbl">worst-case stale window (paid tier)</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 7 ══ -->
+<div class="slide" id="slide-7">
+  <div class="gs-badge">Gelbe Seiten</div>
+  <div class="s7-trow">
+    <span class="s7-title">The pipeline — how data flows</span>
+    <span class="s7-subtitle">Demo dataset: 500 sites · Architecture scales to 3.8M</span>
+  </div>
+  <div class="s7-body">
+    <div class="s7-left">
+      <div class="s7-swrap" id="s7-swrap"><svg id="s7-sankey"></svg></div>
+      <div class="s7-ovrow" id="s7-ov"></div>
+    </div>
+    <div class="s7-right">
+      <div class="s7-eyebrow">Why this works</div>
+      <div class="s7-bullet full" data-step="0"><div class="s7-blabel">Impressum-first</div><div class="s7-btext">near-zero cost per record</div></div>
+      <div class="s7-hl" id="s7h1" style="background:#C8EDE3;border-left-color:#0F6E56"><div class="s7-hllabel" style="color:#0A4A38">IMPRESSUM-FIRST</div><div class="s7-hlbody">Legally required in Germany — cheapest possible first pass at any scale</div></div>
+      <div class="s7-bullet" data-step="1"><div class="s7-blabel">Regex extraction</div><div class="s7-btext">free, handles most records</div></div>
+      <div class="s7-hl" id="s7h2" style="background:#E0DEFF;border-left-color:#3C3489"><div class="s7-hllabel" style="color:#3C3489">SELF-IMPROVING REGEX</div><div class="s7-hlbody">LLM finds the structure and rewrites the pattern — next visit costs nothing</div></div>
+      <div class="s7-bullet" data-step="2"><div class="s7-blabel">LLM → better regex</div><div class="s7-btext">pattern improves each time</div></div>
+      <div class="s7-hl" id="s7h3" style="background:#C8EDE3;border-left-color:#0F6E56"><div class="s7-hllabel" style="color:#0A4A38">DATABASE UPDATED</div><div class="s7-hlbody">448 records corrected automatically. Regex patterns improved for future visits.</div></div>
+      <div class="s7-bullet" data-step="3"><div class="s7-blabel">Self-healing</div><div class="s7-btext">pipeline gets cheaper every run</div></div>
+      <div class="s7-hl" id="s7h4" style="background:#E0DEFF;border-left-color:#3C3489"><div class="s7-hllabel" style="color:#3C3489">LLM AS LAST RESORT</div><div class="s7-hlbody">When no structure is recognised, LLM reads raw HTML, extracts data, writes improved regex — never needs to do this again.</div></div>
+      <div class="s7-bullet" data-step="4"><div class="s7-blabel">LLM as last resort</div><div class="s7-btext">structural recognition once</div></div>
+    </div>
+  </div>
+  <div class="s7-simbar">
+    <div class="s7-sim-top">
+      <div class="s7-sim-cols">
+        <div class="s7-sim-col"><div class="s7-sim-num" style="color:#FFFFFF">365 extracted</div><div class="s7-sim-sub">of 500 listings</div></div>
+        <div class="s7-sim-col"><div class="s7-sim-num" style="color:#0F6E56">285 complete</div><div class="s7-sim-sub">78% · all 4 fields</div></div>
+        <div class="s7-sim-col"><div class="s7-sim-num" style="color:#F5C800">€0.134 total</div><div class="s7-sim-sub">first run</div></div>
+        <div class="s7-sim-col"><div class="s7-sim-num" style="color:#F5C800">€0.000268</div><div class="s7-sim-sub">per listing</div></div>
+        <div class="s7-sim-col"><div class="s7-sim-num" style="color:#0F6E56">~€0.03–0.05</div><div class="s7-sim-sub">after 200 brain patterns</div></div>
+      </div>
+      <div class="s7-sim-dots" id="s7-dots"><div class="s7-dot on"></div><div class="s7-dot"></div><div class="s7-dot"></div><div class="s7-dot"></div><div class="s7-dot"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 8 ══ -->
+<div class="slide" id="slide-8">
+  <div class="gs-badge">Gelbe Seiten</div>
+  <div class="s8-head wa" id="s8-h">The system decides when to look.</div>
+  <div class="s8-sub wa" id="s8-s">Not random. Not constant. Priority-driven.</div>
+  <div class="s8-tiers">
+    <div class="s8-tier ta wa" id="s8ta"><div class="s8-tlbl">Tier A</div><div class="s8-ttitle">Paid listings · High traffic</div><div class="s8-tcheck">Daily check · HEAD/DNS</div><div class="s8-tscale">~760k checks/day at scale</div></div>
+    <div class="s8-tier tb wa" id="s8tb"><div class="s8-tlbl">Tier B</div><div class="s8-ttitle">Standard listings · Stable</div><div class="s8-tcheck">Weekly check · HEAD/DNS</div><div class="s8-tscale">~63k checks/day at scale</div></div>
+    <div class="s8-tier tc wa" id="s8tc"><div class="s8-tlbl">Tier C</div><div class="s8-ttitle">Edge cases · Missing info</div><div class="s8-tcheck">Monthly check · HEAD/DNS</div><div class="s8-tscale">~12k checks/day at scale</div></div>
+  </div>
+  <div class="s8-imp wa" id="s8-imp">
+    <div><div class="s8-implbl">Impressum-first logic</div><div class="s8-impbody">German law requires every business website to publish an Impressum — name, address, phone. Always there. Almost never redesigned. Our most reliable data source at any scale.</div></div>
+    <div class="s8-imppills"><div class="s8-imppill">~3.8M websites have one</div><div class="s8-imppill">Changes format rarely</div><div class="s8-imppill">Near-zero cost to check</div></div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 9 ══ -->
+<div class="slide" id="slide-9">
+  <div class="gs-badge">Gelbe Seiten</div>
+  <div class="s9-pills wa" id="s9-pills"><span class="s9-py">STAGE 1</span><span class="s9-pg">STAGE 2</span></div>
+  <div class="s9-head wa" id="s9-h">Extract. Monitor. Improve. Repeat.</div>
+  <div class="s9-cols">
+    <div class="s9-card wa" id="s9-lc">
+      <div class="s9-ch"><span class="s9-py" style="font-size:12px;padding:3px 8px">STAGE 1</span><span class="s9-ctitle">Get the current state</span></div>
+      <div class="s9-item"><i class="ti ti-sitemap" style="font-size:16px;color:#F5C800;margin-right:10px;vertical-align:middle;flex-shrink:0"></i><span class="s9-itext">Sitemap extraction</span></div>
+      <div class="s9-item"><i class="ti ti-code" style="font-size:16px;color:#F5C800;margin-right:10px;vertical-align:middle;flex-shrink:0"></i><span class="s9-itext">Regex [Keywords]</span></div>
+      <div class="s9-item"><i class="ti ti-brain" style="font-size:16px;color:#F5C800;margin-right:10px;vertical-align:middle;flex-shrink:0"></i><span class="s9-itext">LLM Check</span></div>
+      <div class="s9-item"><i class="ti ti-refresh-dot" style="font-size:16px;color:#F5C800;margin-right:10px;vertical-align:middle;flex-shrink:0"></i><span class="s9-itext">Self-learning</span></div>
+      <div class="s9-item"><i class="ti ti-fingerprint" style="font-size:16px;color:#F5C800;margin-right:10px;vertical-align:middle;flex-shrink:0"></i><span class="s9-itext">Hash / Checksum</span></div>
+    </div>
+    <div class="s9-centre">
+      <svg id="s9-loop" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:208px">
+        <defs>
+          <marker id="arrow-yellow" viewBox="0 0 6 6" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#F5C800"/>
+          </marker>
+        </defs>
+        <!-- Base circle — animated stroke-dashoffset on entry -->
+        <circle id="s9-circle" cx="130" cy="130" r="90" stroke="#F5C800" stroke-width="1.5" fill="none" opacity="0.6" stroke-dasharray="565" stroke-dashoffset="565"/>
+        <!-- Arc segments (clockwise, 30° each, initially hidden) -->
+        <path id="s9arc1" d="M 162.3,46.0 A 90,90 0 0,1 199.9,73.4" stroke="#F5C800" stroke-width="1.5" fill="none" marker-end="url(#arrow-yellow)" opacity="0"/>
+        <path id="s9arc2" d="M 219.9,134.7 A 90,90 0 0,1 205.5,179.0" stroke="#F5C800" stroke-width="1.5" fill="none" marker-end="url(#arrow-yellow)" opacity="0"/>
+        <path id="s9arc3" d="M 153.3,216.9 A 90,90 0 0,1 106.7,216.9" stroke="#F5C800" stroke-width="1.5" fill="none" marker-end="url(#arrow-yellow)" opacity="0"/>
+        <path id="s9arc4" d="M 54.5,179.0 A 90,90 0 0,1 40.1,134.7" stroke="#F5C800" stroke-width="1.5" fill="none" marker-end="url(#arrow-yellow)" opacity="0"/>
+        <path id="s9arc5" d="M 60.1,73.4 A 90,90 0 0,1 97.7,46.0" stroke="#F5C800" stroke-width="1.5" fill="none" marker-end="url(#arrow-yellow)" opacity="0"/>
+        <!-- Labels (initially hidden) -->
+        <text id="s9l1" x="130" y="18" text-anchor="middle" dominant-baseline="middle" font-family="'Barlow Condensed',sans-serif" font-size="15" font-weight="500" fill="#F5C800" opacity="0">Extract</text>
+        <text id="s9l2" x="236" y="95" text-anchor="middle" dominant-baseline="middle" font-family="'Barlow Condensed',sans-serif" font-size="15" font-weight="500" fill="#F5C800" opacity="0">Monitor</text>
+        <text id="s9l3" x="196" y="221" text-anchor="middle" dominant-baseline="middle" font-family="'Barlow Condensed',sans-serif" font-size="15" font-weight="500" fill="#F5C800" opacity="0">Update</text>
+        <text id="s9l4" x="64" y="221" text-anchor="middle" dominant-baseline="middle" font-family="'Barlow Condensed',sans-serif" font-size="15" font-weight="500" fill="#F5C800" opacity="0">Improve</text>
+        <text id="s9l5" x="24" y="95" text-anchor="middle" dominant-baseline="middle" font-family="'Barlow Condensed',sans-serif" font-size="15" font-weight="500" fill="#F5C800" opacity="0">Learn</text>
+        <!-- Centre dot (always visible) -->
+        <circle cx="130" cy="130" r="8" fill="#F5C800"/>
+      </svg>
+    </div>
+    <div class="s9-card wa" id="s9-rc">
+      <div class="s9-ch"><span class="s9-pg" style="font-size:12px;padding:3px 8px">STAGE 2</span><span class="s9-ctitle">Monitor regularly</span></div>
+      <div class="s9-item"><i class="ti ti-adjustments-horizontal" style="font-size:16px;color:#F5C800;margin-right:10px;vertical-align:middle;flex-shrink:0"></i><span class="s9-itext">Adaptive monitoring</span></div>
+      <div class="s9-item"><i class="ti ti-file-description" style="font-size:16px;color:#F5C800;margin-right:10px;vertical-align:middle;flex-shrink:0"></i><span class="s9-itext">Impressum / footer check</span></div>
+      <div class="s9-item"><i class="ti ti-git-compare" style="font-size:16px;color:#F5C800;margin-right:10px;vertical-align:middle;flex-shrink:0"></i><span class="s9-itext">Checksum trigger</span></div>
+      <div class="s9-item"><i class="ti ti-cpu" style="font-size:16px;color:#F5C800;margin-right:10px;vertical-align:middle;flex-shrink:0"></i><span class="s9-itext">Local NER model</span></div>
+      <div class="s9-item"><i class="ti ti-chart-bar" style="font-size:16px;color:#F5C800;margin-right:10px;vertical-align:middle;flex-shrink:0"></i><span class="s9-itext">Confidence score</span></div>
+      <div class="s9-item"><i class="ti ti-mail" style="font-size:16px;color:#F5C800;margin-right:10px;vertical-align:middle;flex-shrink:0"></i><span class="s9-itext">Automated client email</span></div>
+      <div class="s9-item"><i class="ti ti-circle-check" style="font-size:16px;color:#0F6E56;margin-right:10px;vertical-align:middle;flex-shrink:0"></i><span class="s9-itext" style="color:#0F6E56">DB updated</span></div>
+    </div>
+  </div>
+  <div class="s9-tagline wa" id="s9-tag">Every cycle makes the next one cheaper and more accurate.</div>
+</div>
+
+<!-- ══ SLIDE 10 ══ -->
+<div class="slide" id="slide-10">
+  <div class="gs-badge">Gelbe Seiten</div>
+  <div class="s10-lbl wa" id="s10-lbl">Live Demo</div>
+  <div class="s10-head wa" id="s10-h">Three businesses. Three outcomes.</div>
+  <div class="s10-cards">
+    <div class="s10-card c1 wsc" id="s10c1"><i class="ti ti-circle-check"></i><div class="s10-ctitle">① Phone number change</div><div class="s10-cresult">→ DB updated automatically</div><div class="s10-ctag">Confidence 0.91 · No LLM needed</div></div>
+    <div class="s10-card c2 wsc" id="s10c2"><i class="ti ti-mail"></i><div class="s10-ctitle">② Law firm rebrand</div><div class="s10-cresult">→ Automated email sent</div><div class="s10-ctag">Confidence 0.41 · Verification needed</div></div>
+    <div class="s10-card c3 wsc" id="s10c3"><i class="ti ti-alert-triangle"></i><div class="s10-ctitle">③ Business gone</div><div class="s10-cresult">→ Human decision required</div><div class="s10-ctag">Website offline · Archive or contact</div></div>
+  </div>
+  <div class="s10-bottom wa" id="s10-bot"><div class="s10-s1">89% of records look like scenario one.</div><div class="s10-s2">The other 11% are handled — not ignored.</div></div>
+</div>
+
+<!-- ══ SLIDE 11 ══ -->
+<div class="slide" id="slide-11">
+  <div class="gs-badge">Gelbe Seiten</div>
+  <div class="s11-head wa" id="s11-h">Low maintenance. High transparency.</div>
+  <div class="s11-sub wa" id="s11-s">Every decision is logged. Every update is traceable.</div>
+  <div class="s11-dash wa" id="s11-dash">
+    <div class="s11-tiles">
+      <div class="s11-tile"><div class="s11-tnum wh" id="t1">0</div><div class="s11-tlbl">Records checked</div><div class="s11-tsub gr">↑ 12% vs yesterday</div></div>
+      <div class="s11-tile"><div class="s11-tnum gr" id="t2">0</div><div class="s11-tlbl">Auto-updated</div><div class="s11-tsub mu">Confidence ≥ 0.85 · no LLM</div></div>
+      <div class="s11-tile"><div class="s11-tnum am" id="t3">0</div><div class="s11-tlbl">Need review</div><div class="s11-tsub am">→ 12 new since last login</div></div>
+      <div class="s11-tile"><div class="s11-tnum bl" id="t4">0</div><div class="s11-tlbl">Emails sent</div><div class="s11-tsub mu">↓ 3 bounces · 8 replies</div></div>
+    </div>
+    <div class="s11-row wa" id="s11f1"><span class="s11-ts">[14:22]</span><span class="s11-biz">Fahrrad König</span><span class="s11-ev">Website offline detected</span><span class="s11-pill em">Email sent</span></div>
+    <div class="s11-row wa" id="s11f2"><span class="s11-ts">[13:05]</span><span class="s11-biz">Blumenhaus Sonnenschein</span><span class="s11-ev">Opening hours updated</span><span class="s11-pill au">Auto-updated</span></div>
+    <div class="s11-row wa" id="s11f3"><span class="s11-ts">[11:47]</span><span class="s11-biz">Optik Stadtmitte</span><span class="s11-ev">Impressum changed — low confidence</span><span class="s11-pill re">Needs review</span></div>
+    <div class="s11-row wa" id="s11f4"><span class="s11-ts">[09:14]</span><span class="s11-biz">Bäckerei Rosenthaler</span><span class="s11-ev">Address changed — email bounced</span><span class="s11-pill bo">Bounce</span></div>
+    <div class="s11-row wa" id="s11f5"><span class="s11-ts">[08:30]</span><span class="s11-biz">Café Morgenrot</span><span class="s11-ev">Phone number confirmed by owner</span><span class="s11-pill rp">Reply received</span></div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 12 ══ -->
+<div class="slide" id="slide-12">
+  <div class="gs-badge">Gelbe Seiten</div>
+  <div class="s12-head wa" id="s12-h">Built to scale. Not built to spend.</div>
+  <div class="s12-sub wa" id="s12-s">Real numbers from our codebase. 100,000 listings per month.</div>
+  <div class="s12-r1 wa" id="s12-r1">
+    <div class="s12-block"><div class="s12-blbl">This system — steady state</div><div class="s12-bnum gr">€0.10 – €0.50</div><div class="s12-bsub">per month at 100k listings</div><div class="s12-bcalls gr">~100–300 LLM calls total</div></div>
+    <div class="s12-block"><div class="s12-blbl">GPT-4o-mini naive</div><div class="s12-bnum rd">€377</div><div class="s12-bsub">per month — cheapest naive</div><div class="s12-bcalls rd">433,000 LLM calls</div></div>
+    <div class="s12-block"><div class="s12-blbl">GPT-4o naive</div><div class="s12-bnum rd">€6,073</div><div class="s12-bsub">per month</div><div class="s12-bcalls rd">433,000 LLM calls</div></div>
+    <div class="s12-block"><div class="s12-blbl">Claude Sonnet naive</div><div class="s12-bnum rd">€7,790</div><div class="s12-bsub">per month</div><div class="s12-bcalls rd">433,000 LLM calls</div></div>
+    <div style="flex-basis:100%"><div class="s12-sep"></div><div class="s12-anote">Same model as the naive baseline. The savings come from the architecture.</div></div>
+  </div>
+  <div class="s12-r2">
+    <div>
+      <div class="s12-tcard wa" id="s12-tc">
+        <table class="s12-tbl">
+          <thead><tr><th>Technique</th><th>Cost/100k/month</th><th>Self-improves?</th></tr></thead>
+          <tbody>
+            <tr><td>HEAD/DNS doorman</td><td>~€0</td><td>—</td></tr>
+            <tr><td>Regex / JSON-LD</td><td>~€0</td><td>—</td></tr>
+            <tr><td>Brain patterns</td><td>~€0 after first</td><td class="ck">✓</td></tr>
+            <tr><td>Recipe build</td><td>~€0.02 one-time</td><td class="ck">✓</td></tr>
+            <tr class="naive"><td>gpt-4o-mini naive</td><td>€377</td><td class="cx">✗</td></tr>
+            <tr class="sys"><td>This system</td><td>€0.10–€10<span class="s12-tsub gr">month 1: ~€10 · month 2+: ~€0.50</span></td><td>✓</td></tr>
+          </tbody>
+        </table>
+        <div class="s12-pq">"The last row achieves the quality of the LLM row — because the LLM only runs on the 2% that need it."</div>
+      </div>
+    </div>
+    <div class="s12-mcards wa" id="s12-mc">
+      <div class="s12-mc"><div class="s12-mnum">~750×</div><div><div class="s12-mlbl">cheaper than gpt-4o-mini naive</div><div class="s12-msub">Same model — different architecture</div></div></div>
+      <div class="s12-mc"><div class="s12-mnum">~600×</div><div><div class="s12-mlbl">cheaper than gpt-4o</div><div class="s12-msub">Frontier model, full HTML per call</div></div></div>
+      <div class="s12-mc"><div class="s12-mnum">~780×</div><div><div class="s12-mlbl">cheaper than claude-sonnet-4-5</div><div class="s12-msub">Re-pays per record forever. We don't.</div></div></div>
+    </div>
+  </div>
+  <div class="s12-r3 wa" id="s12-r3">
+    <div><div class="s12-bllbl">Self-improving by design</div><div class="s12-blbody">Every successful extraction trains a new regex pattern. Every new pattern means one fewer LLM call next time. LLM cost trends to zero per domain as the brain learns.</div></div>
+    <div class="s12-bstats">
+      <div class="s12-bs"><div class="s12-bsn">80%</div><div class="s12-bsl">of checks skipped by doorman</div></div>
+      <div class="s12-bdiv"></div>
+      <div class="s12-bs"><div class="s12-bsn">94%</div><div class="s12-bsl">solved by free layers</div></div>
+      <div class="s12-bdiv"></div>
+      <div class="s12-bs"><div class="s12-bsn">~0%</div><div class="s12-bsl">LLM cost in steady state</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 13 ══ -->
+<div class="slide" id="slide-13">
+  <div class="gs-badge">Gelbe Seiten</div>
+  <div class="s13-inner">
+    <div class="s13-l1 wa" id="s13-l1">Turn outdated directory data</div>
+    <div class="s13-l2 wa" id="s13-l2">into a living, self-updating system.</div>
+    <div class="s13-rule" id="s13-rule" style="width:0;transition:width 400ms ease-out 240ms"></div>
+    <div class="s13-tag wa" id="s13-tag">Built to run at scale. Without breaking the bank.</div>
+    <div class="s13-pills">
+      <div class="s13-pill wh wa" id="s13p1">Scales to 3.8M records</div>
+      <div class="s13-pill ye wa" id="s13p2">Cost by design</div>
+      <div class="s13-pill wh wa" id="s13p3">Explainable decisions</div>
+      <div class="s13-pill wh wa" id="s13p4">Regex before LLM</div>
+      <div class="s13-pill wh wa" id="s13p5">Human intervention rare</div>
+    </div>
+    <div class="s13-footer wa" id="s13-foot">Team 4 &nbsp;·&nbsp; Live Data Engine &nbsp;·&nbsp; Hackathon 2026</div>
+  </div>
+</div>
+
+<div id="progress-bar"></div>
+<div id="slide-counter">1 / 13</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+<script>
+(function(){
+'use strict';
+var current=1, TOTAL=13, visited=new Set(), transitioning=false;
+var s6Timeouts=[], s6Done=false, sankeyReady=false, sankeyStep=0, SANKEY_MAX=4;
+
+function updateUI(){
+  document.getElementById('progress-bar').style.width=(current/TOTAL*100)+'%';
+  document.getElementById('slide-counter').textContent=current+' / '+TOTAL;
+}
+function resetSankey(){
+  sankeyStep=0;
+  document.querySelectorAll('#slide-7 .s7-bullet').forEach(function(b){
+    b.classList.remove('full','revealed','active');
+    if(parseInt(b.dataset.step,10)===0) b.classList.add('full');
+  });
+  [1,2,3,4].forEach(function(i){var hl=document.getElementById('s7h'+i);if(hl)hl.classList.remove('on');});
+  document.querySelectorAll('#s7-dots .s7-dot').forEach(function(d,i){d.classList.toggle('on',i===0);});
+  if(window._s6rs) window._s6rs.attr('opacity',1);
+  if(window._s6ls) window._s6ls.attr('stroke-opacity',0.55);
+}
+function showSlide(n){
+  document.querySelectorAll('.slide').forEach(function(s){s.classList.remove('active');});
+  var sl=document.getElementById('slide-'+n); if(sl) sl.classList.add('active');
+  if(n===7){resetSankey();}
+  if(n===9){animateLoop();}
+}
+function goTo(n){
+  if(transitioning||n<1||n>TOTAL||n===current) return;
+  if(current===6){ s6Timeouts.forEach(clearTimeout); s6Timeouts=[]; finaliseS6(); }
+  var prev=current; transitioning=true; current=n;
+  showSlide(n); updateUI();
+  setTimeout(function(){ transitioning=false; onEnter(n,prev); },60);
+}
+function next(){ goTo(current+1); }
+function prev(){ goTo(current-1); }
+
+function onEnter(n){
+  if(n===1&&!visited.has(1)){visited.add(1);animS1();}
+  if(n===2&&!visited.has(2)){visited.add(2);animS2();}
+  if(n===3&&!visited.has(3)){visited.add(3);animS3();}
+  if(n===4&&!visited.has(4)){visited.add(4);animS4();}
+  if(n===5&&!visited.has(5)){visited.add(5);animS5();}
+  if(n===6){s6Done=false;animS6();}
+  if(n===7){if(!sankeyReady)initSankey();renderSankey();}
+  if(n===8&&!visited.has(8)){visited.add(8);animS8();}
+  if(n===9){if(!visited.has(9)){visited.add(9);animS9();}}
+  if(n===10&&!visited.has(10)){visited.add(10);animS10();}
+  if(n===11&&!visited.has(11)){visited.add(11);animS11();}
+  if(n===12&&!visited.has(12)){visited.add(12);animS12();}
+  if(n===13){animS13();}
+}
+
+function animS1(){
+  ['s1-a','s1-b','s1-c','s1-d'].forEach(function(id,i){
+    setTimeout(function(){var el=document.getElementById(id);if(el)el.classList.add('in');},i*120);
+  });
+}
+function animS2(){
+  ['s2-h','s2-p','s2p1','s2p2','s2p3','s2r1','s2r2','s2r3','s2r4'].forEach(function(id,i){
+    setTimeout(function(){var el=document.getElementById(id);if(el)el.classList.add('in');},i*80);
+  });
+}
+function animS3(){
+  setTimeout(function(){var el=document.getElementById('s3-l');if(el)el.classList.add('in');},0);
+  setTimeout(function(){var el=document.getElementById('s3-r');if(el)el.classList.add('in');},80);
+  setTimeout(function(){var el=document.getElementById('s3-c');if(el)el.classList.add('in');},420);
+}
+function animS4(){
+  ['s4-pill','s4-h','s4-s','s4-card','s4n1','s4a1','s4n2','s4a2','s4n3','s4a3','s4n4','s4a4','s4n5'].forEach(function(id,i){
+    setTimeout(function(){var el=document.getElementById(id);if(el)el.classList.add('in');},i*80);
+  });
+}
+function animS5(){
+  ['s5-pill','s5-head','s5-sub'].forEach(function(id,i){
+    setTimeout(function(){var el=document.getElementById(id);if(el)el.classList.add('in');},i*80);
+  });
+  ['s5st1','s5ar1','s5st2','s5ar2','s5st3','s5ar3','s5st4','s5st5'].forEach(function(id,i){
+    setTimeout(function(){var el=document.getElementById(id);if(el)el.classList.add('in');},220+i*200);
+  });
+  ['s5rc1','s5rc2','s5rc3','s5rc4','s5rc5'].forEach(function(id,i){
+    setTimeout(function(){var el=document.getElementById(id);if(el)el.classList.add('in');},1900+i*100);
+  });
+}
+
+var S6_IDS=['s6-pill','s6-head','s6-sub','s6-ll','s6c1','s6cn1','s6c2','s6cn2','s6c3','s6-door','s6-rl','s6s1','s6vc1','s6s2','s6vc2','s6s3','s6-fork','s6s4a','s6s4b','s6-sum'];
+function finaliseS6(){
+  S6_IDS.forEach(function(id){
+    var el=document.getElementById(id); if(!el) return;
+    el.style.opacity='1'; el.style.transform='none';
+    if(id==='s6cn1'||id==='s6cn2') el.style.height='8px';
+    if(id==='s6vc1'||id==='s6vc2') el.style.height='8px';
+  });
+  s6Done=true;
+}
+function animS6(){
+  S6_IDS.forEach(function(id){
+    var el=document.getElementById(id); if(!el) return;
+    el.style.opacity='0'; el.style.transform='';
+    if(id==='s6cn1'||id==='s6cn2') el.style.height='0';
+    if(id==='s6vc1'||id==='s6vc2') el.style.height='0';
+    if(id==='s6c1'||id==='s6c2'||id==='s6c3') el.style.transform='translateY(16px)';
+    if(['s6s1','s6s2','s6s3','s6s4a','s6s4b'].indexOf(id)>=0) el.style.transform='translateX(16px)';
+  });
+  s6Done=false;
+  function t(id,delay,fn){
+    var tid=setTimeout(function(){var el=document.getElementById(id);if(!el)return;if(fn)fn(el);else{el.style.opacity='1';el.style.transform='none';}},delay);
+    s6Timeouts.push(tid);
+  }
+  t('s6-pill',0); t('s6-head',40); t('s6-sub',80);
+  t('s6-ll',400);
+  t('s6c1',500); t('s6cn1',800,function(el){el.style.height='8px';});
+  t('s6c2',850); t('s6cn2',1150,function(el){el.style.height='8px';});
+  t('s6c3',1200); t('s6-door',1500);
+  t('s6-rl',1700);
+  t('s6s1',1900); t('s6vc1',2050,function(el){el.style.height='8px';});
+  t('s6s2',2200); t('s6vc2',2350,function(el){el.style.height='8px';});
+  t('s6s3',2500);
+  var tid2=setTimeout(function(){
+    var fk=document.getElementById('s6-fork'); if(fk) fk.style.opacity='1';
+    setTimeout(function(){
+      var a=document.getElementById('s6s4a'); if(a){a.style.opacity='1';a.style.transform='none';}
+    },0);
+    setTimeout(function(){
+      var b=document.getElementById('s6s4b'); if(b){b.style.opacity='1';b.style.transform='none';}
+    },100);
+  },2650);
+  s6Timeouts.push(tid2);
+  t('s6-sum',3100);
+  s6Timeouts.push(setTimeout(function(){s6Done=true;},3200));
+}
+
+function initSankey(){
+  sankeyReady=true;
+  var nodes=[
+    {name:'500 Websites',color:'#1A1A1A',col:0},{name:'Impressum found',color:'#1D9E75',col:1},
+    {name:'No Impressum',color:'#BA7517',col:1},{name:'Unreachable',color:'#E24B4A',col:1},
+    {name:'Regex match',color:'#1D9E75',col:2},{name:'Regex unclear',color:'#BA7517',col:2},
+    {name:'LLM parses HTML',color:'#534AB7',col:2},{name:'Google fallback',color:'#185FA5',col:2},
+    {name:'Data extracted',color:'#1D9E75',col:3},{name:'Regex rewritten',color:'#1D9E75',col:3},
+    {name:'Google confirmed',color:'#1D9E75',col:3},{name:'LLM loops',color:'#534AB7',col:3},
+    {name:'No match',color:'#E24B4A',col:3},{name:'DB updated',color:'#1D9E75',col:4},
+    {name:'Pattern improved',color:'#F5C800',col:4},{name:'Flagged',color:'#E24B4A',col:4}
+  ];
+  var idx={}; nodes.forEach(function(n,i){idx[n.name]=i;});
+  var raw=[
+    ['500 Websites','Impressum found',390],['500 Websites','No Impressum',100],['500 Websites','Unreachable',10],
+    ['Impressum found','Regex match',310],['Impressum found','Regex unclear',80],
+    ['No Impressum','LLM parses HTML',100],['Unreachable','Google fallback',10],
+    ['Regex match','Data extracted',310],['Regex unclear','LLM parses HTML',50],['Regex unclear','LLM loops',30],
+    ['LLM parses HTML','Regex rewritten',80],['LLM parses HTML','Data extracted',70],
+    ['LLM loops','Regex rewritten',20],['LLM loops','Flagged',10],
+    ['Google fallback','Google confirmed',8],['Google fallback','No match',2],
+    ['Data extracted','DB updated',370],['Regex rewritten','DB updated',78],['Regex rewritten','Pattern improved',80],
+    ['Google confirmed','DB updated',8],['No match','Flagged',2]
+  ];
+  var links=raw.map(function(r){return{source:idx[r[0]],target:idx[r[1]],value:r[2]};});
+  var OVERFLOW=new Set(['Unreachable','Google fallback','No match','Google confirmed']);
+  var wrap=document.getElementById('s7-swrap');
+  var W=wrap.clientWidth||680, H=wrap.clientHeight||460;
+  var svg=d3.select('#s7-sankey'); svg.attr('viewBox','0 0 '+W+' '+H);
+  var sk=d3.sankey().nodeWidth(18).nodePadding(14).nodeAlign(d3.sankeyJustify).extent([[6,10],[W-6,H-10]]);
+  var graph=sk({nodes:nodes.map(function(d){return Object.assign({},d);}),links:links.map(function(d){return Object.assign({},d);})});
+  graph.nodes.forEach(function(n){if((n.y1-n.y0)<24)n.y1=n.y0+24;});
+  var lg=svg.append('g').attr('fill','none');
+  window._s6ls=lg.selectAll('path').data(graph.links).join('path').attr('class','sk-link')
+    .attr('d',d3.sankeyLinkHorizontal())
+    .attr('stroke',function(d){return graph.nodes[d.source.index].color;})
+    .attr('stroke-opacity',0.55).attr('stroke-width',function(d){return Math.max(1,d.width);});
+  var rg=svg.append('g');
+  window._s6rs=rg.selectAll('rect').data(graph.nodes).join('rect')
+    .attr('x',function(d){return d.x0;}).attr('y',function(d){return d.y0;})
+    .attr('height',function(d){return Math.max(2,d.y1-d.y0);}).attr('width',function(d){return d.x1-d.x0;})
+    .attr('fill',function(d){return d.color;}).attr('opacity',1);
+  svg.append('g').selectAll('text')
+    .data(graph.nodes.filter(function(d){return !OVERFLOW.has(d.name)&&(d.y1-d.y0)>=20;}))
+    .join('text')
+    .attr('class','node-label')
+    .attr('x',function(d){return d.col<=1?d.x0-8:d.x1+8;})
+    .attr('y',function(d){return(d.y0+d.y1)/2;})
+    .attr('dominant-baseline','middle')
+    .attr('text-anchor',function(d){return d.col<=1?'end':'start';})
+    .text(function(d){return d.name;});
+  window._s6graph=graph;
+  var ovEl=document.getElementById('s7-ov');
+  if(ovEl){ovEl.innerHTML='';graph.nodes.filter(function(n){return OVERFLOW.has(n.name)||(n.y1-n.y0)<20;}).forEach(function(n){
+    var item=document.createElement('div');item.className='s7-ovitem';
+    var dot=document.createElement('span');dot.className='s7-ovdot';dot.style.background=n.color;
+    var txt=document.createElement('span');txt.textContent=n.name;
+    item.appendChild(dot);item.appendChild(txt);ovEl.appendChild(item);
+  });}
+  window._s6sn={1:new Set(['Impressum found']),2:new Set(['LLM parses HTML','Regex rewritten','Pattern improved']),3:new Set(['DB updated','Regex rewritten','Pattern improved']),4:new Set(['LLM parses HTML','LLM loops','Regex rewritten'])};
+}
+
+function renderSankey(){
+  var step=sankeyStep, rs=window._s6rs, ls=window._s6ls;
+  if(!rs||!ls) return;
+  for(var i=1;i<=4;i++){var hl=document.getElementById('s7h'+i);if(hl)hl.classList.toggle('on',i===step);}
+  document.querySelectorAll('#slide-7 .s7-bullet').forEach(function(b){
+    var s=parseInt(b.dataset.step,10);
+    b.classList.remove('full','revealed','active');
+    if(s===0)b.classList.add('full');
+    if(s===step)b.classList.add('active');
+    else if(s<step)b.classList.add('revealed');
+  });
+  document.querySelectorAll('#s7-dots .s7-dot').forEach(function(d,i){d.classList.toggle('on',i===step);});
+  if(step===0){rs.attr('opacity',1);ls.attr('stroke-opacity',0.55);}
+  else{
+    var an=window._s6sn[step];
+    rs.attr('opacity',function(d){return an.has(d.name)?1:0.2;});
+    ls.attr('stroke-opacity',function(d){return(an.has(d.source.name)&&an.has(d.target.name))?0.85:0.12;});
+  }
+}
+
+function animS8(){
+  ['s8-h','s8-s','s8ta','s8tb','s8tc','s8-imp'].forEach(function(id,i){
+    setTimeout(function(){var el=document.getElementById(id);if(el)el.classList.add('in');},i*100);
+  });
+}
+
+function animateLoop(){
+  var circleEl=document.getElementById('s9-circle');
+  if(!circleEl) return;
+  // Reset all to initial state
+  circleEl.style.transition='none';
+  circleEl.style.strokeDashoffset='565';
+  ['s9arc1','s9arc2','s9arc3','s9arc4','s9arc5','s9l1','s9l2','s9l3','s9l4','s9l5'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el){el.style.transition='none';el.style.opacity='0';}
+  });
+  // Two rAF beats to flush the reset before animating
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      // 1. Animate circle stroke-dashoffset 565→0 over 800ms ease-out
+      var start=null, dur=800;
+      requestAnimationFrame(function draw(ts){
+        if(!start) start=ts;
+        var p=Math.min((ts-start)/dur,1);
+        var ease=1-Math.pow(1-p,2);
+        circleEl.style.strokeDashoffset=(565*(1-ease)).toFixed(2);
+        if(p<1) requestAnimationFrame(draw);
+      });
+      // 2. Arc + label pairs fade in sequentially (320ms start, 150ms stagger)
+      var pairs=[['s9arc1','s9l1'],['s9arc2','s9l2'],['s9arc3','s9l3'],['s9arc4','s9l4'],['s9arc5','s9l5']];
+      pairs.forEach(function(pair,i){
+        pair.forEach(function(id){
+          setTimeout(function(){
+            var el=document.getElementById(id);
+            if(el){el.style.transition='opacity 300ms ease';el.style.opacity='1';}
+          },320+i*150);
+        });
+      });
+    });
+  });
+}
+function animS9(){
+  ['s9-pills','s9-h','s9-lc','s9-rc','s9-tag'].forEach(function(id,i){
+    setTimeout(function(){var el=document.getElementById(id);if(el)el.classList.add('in');},i*100);
+  });
+}
+
+function animS10(){
+  ['s10-lbl','s10-h'].forEach(function(id,i){setTimeout(function(){var el=document.getElementById(id);if(el)el.classList.add('in');},i*80);});
+  ['s10c1','s10c2','s10c3'].forEach(function(id,i){setTimeout(function(){var el=document.getElementById(id);if(el)el.classList.add('in');},200+i*200);});
+  setTimeout(function(){var el=document.getElementById('s10-bot');if(el)el.classList.add('in');},860);
+}
+
+function animS11(){
+  ['s11-h','s11-s','s11-dash'].forEach(function(id,i){setTimeout(function(){var el=document.getElementById(id);if(el)el.classList.add('in');},i*80);});
+  setTimeout(function(){
+    countUp('t1',1847,0); countUp('t2',312,0); countUp('t3',47,0); countUp('t4',23,0);
+  },280);
+  ['s11f1','s11f2','s11f3','s11f4','s11f5'].forEach(function(id,i){
+    setTimeout(function(){var el=document.getElementById(id);if(el)el.classList.add('in');},480+i*80);
+  });
+}
+
+function animS12(){
+  ['s12-h','s12-s','s12-r1'].forEach(function(id,i){setTimeout(function(){var el=document.getElementById(id);if(el)el.classList.add('in');},i*80);});
+  setTimeout(function(){
+    ['s12-tc','s12-mc','s12-r3'].forEach(function(id,i){setTimeout(function(){var el=document.getElementById(id);if(el)el.classList.add('in');},i*100);});
+  },300);
+}
+
+function animS13(){
+  ['s13-l1','s13-l2'].forEach(function(id,i){
+    var el=document.getElementById(id); if(!el)return;
+    el.classList.remove('in'); void el.offsetWidth;
+    setTimeout(function(){el.classList.add('in');},i*120);
+  });
+  setTimeout(function(){var r=document.getElementById('s13-rule');if(r)r.style.width='100px';},400);
+  ['s13-tag','s13p1','s13p2','s13p3','s13p4','s13p5','s13-foot'].forEach(function(id,i){
+    setTimeout(function(){var el=document.getElementById(id);if(el)el.classList.add('in');},520+i*60);
+  });
+}
+
+function countUp(id,target,decimals){
+  var el=document.getElementById(id); if(!el)return;
+  var start=performance.now(), dur=900;
+  (function step(now){
+    var t=Math.min((now-start)/dur,1), ease=1-Math.pow(1-t,3);
+    el.textContent=(target*ease).toFixed(decimals);
+    if(t<1) requestAnimationFrame(step);
+    else el.textContent=target.toFixed(decimals);
+  })(performance.now());
+}
+
+document.addEventListener('keydown',function(e){
+  var key=e.key;
+  if(current===7&&(key===' '||e.code==='Space'||key==='ArrowRight')){
+    e.preventDefault();
+    if(sankeyStep<SANKEY_MAX){sankeyStep++;renderSankey();}
+    else{goTo(8);}
+    return;
+  }
+  if(transitioning)return;
+  if(key==='ArrowRight'||key===' '||e.code==='Space'){
+    e.preventDefault();
+    if(current===6&&!s6Done){s6Timeouts.forEach(clearTimeout);s6Timeouts=[];finaliseS6();}
+    else{next();}
+  } else if(key==='ArrowLeft'){
+    e.preventDefault();
+    prev();
+  } else if(key>='1'&&key<='9'){
+    goTo(parseInt(key));
+  } else if(key==='0'){
+    goTo(11);
+  }
+});
+
+showSlide(1); updateUI(); visited.add(1);
+setTimeout(function(){animS1();},100);
+})();
+</script>
+</body>
+</html>
